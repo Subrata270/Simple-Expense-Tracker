@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Backend",
+            "type": "lldb", // or "cppvsdbg" or "codelldb" depending on your Rust extension
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/target/debug/backend.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/backend",
+            "console": "integratedTerminal",
+            "env": {
+                "DATABASE_URL": "sqlite://e:/Expense_Tracker/expense-tracker/backend/expense_tracker.db"
+            }
+        }
+    ]
+}

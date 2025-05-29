@@ -1,6 +1,7 @@
 //setup database pool
 use actix_web::{App, HttpServer, web};
 use sqlx::sqlite::SqlitePoolOptions;
+use sqlx::SqlitePool;
 use actix_cors::Cors;
 
 mod models;
@@ -20,7 +21,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .configure(routes::init)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1",8081))?
     .run()
     .await
 }

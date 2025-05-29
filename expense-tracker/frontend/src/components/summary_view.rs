@@ -1,6 +1,7 @@
-// Fetches and displays the total expenses for the current month.
 use yew::prelude::*;
 use serde::Deserialize;
+use gloo_net::http::Request;
+use wasm_bindgen_futures::spawn_local;
 
 #[derive(Deserialize, Clone)]
 struct Summary {
@@ -14,13 +15,15 @@ pub fn summary_view() -> Html {
     {
         let summary = summary.clone();
         use_effect_with((), move |_| {
-            wasm_bindgen_futures::spawn_local(async move {
-                let resp = reqwest::get("http://127.0.0.1:8080/expenses/summary")
-                    .await
-                    .ok()
-                    .and_then(|r| r.json::<Summary>().await.ok())
-                    .unwrap_or(Summary { total: Some(0.0) });
-                summary.set(resp);
+            spawn_local(async move {
+                let resp = Request::get("http://127.0.0.1:8081/expenses/summary")
+                    .send()
+                    .await;
+                let data = match resp {
+                    Ok(r) => r.json::<Summary>().await.unwrap_or(Summary { total: Some(0.0) }),
+                    Err(_) => Summary { total: Some(0.0) },
+                };
+                summary.set(data);
             });
             || ()
         });
